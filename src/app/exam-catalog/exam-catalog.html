@@ -1,0 +1,15 @@
+@let catalog = catalogService.catalog();
+<div class="catalog-container">
+  @for(exam of catalog?.exams; track exam.id){
+  <div class="exam-block">
+    <span>{{ exam.title }}</span>
+    <button
+      class="btn btn-sm text-white fw-bold"
+      style="background-color: #607d9c"
+      [routerLink]="['/question-page']"
+    >
+      Questions
+    </button>
+  </div>
+  }
+</div>
