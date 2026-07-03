@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { Question } from '../data/question';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -11,6 +11,8 @@ import { Questions } from '../service/questions';
 })
 export class QuestionPageComponent {
   questions = signal<Question[]>([]);
+  currentIndex = signal(0);
+  currentQuestion = computed(() => this.questions()[this.currentIndex()]);
   examId = '';
   topicId = '';
 
@@ -28,7 +30,6 @@ export class QuestionPageComponent {
 
       this.questionService.getQuestions(this.examId, this.topicId).subscribe({
         next: (questions) => {
-          console.log(questions);
           this.questions.set(questions);
         },
         error: (err) => {
@@ -36,5 +37,14 @@ export class QuestionPageComponent {
         },
       });
     });
+  }
+  
+  next() {
+      if (this.currentIndex() < this.questions().length - 1) {
+        this.currentIndex.set(this.currentIndex() + 1);
+    }
+    else {
+      console.log('Ende der Fragenliste erreicht.');
+    }
   }
 }
