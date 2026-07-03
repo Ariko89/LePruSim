@@ -3,10 +3,12 @@ import { Home } from './home/home';
 import { QuestionPageComponent } from './question-page/question-page';
 import { QuestionCatalog } from './question-catalog/question-catalog';
 import { QuestionDetails } from './question-details/question-details';
+import { ExamCatalog } from './exam-catalog/exam-catalog';
 
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'question-page/:examId/:topicId', component: QuestionPageComponent },
   { path: 'question-catalog', component: QuestionCatalog },
   { path: 'question-details/:examId/:topicId', component: QuestionDetails },
+  { path: 'exam-catalog', component: ExamCatalog },
 ];
