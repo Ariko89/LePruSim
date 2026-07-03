@@ -2,6 +2,8 @@ import { Component, computed, OnInit, signal } from '@angular/core';
 import { Question } from '../data/question';
 import { ActivatedRoute } from '@angular/router';
 import { Questions } from '../service/questions';
+import { Answer } from '../data/answer';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-question-page',
@@ -61,17 +63,25 @@ export class QuestionPageComponent implements OnInit {
     this.showSolution.set(false);
   }
 
-  check(){
+  check() {
     const q = this.currentQuestion();
     if (!q) return;
 
     let isCorrect = false;
     if (q.type === 'sc' || q.type === 'mc') {
-      const correctIds = q.answers.filter((a) => a.isCorrect).map((a) => a.id).sort();
+      const correctIds = q.answers
+        .filter((a) => a.isCorrect)
+        .map((a) => a.id)
+        .sort();
       const selectedIds = this.selectedAnswerId().sort();
       isCorrect = JSON.stringify(correctIds) === JSON.stringify(selectedIds);
     } else if (q.type === 'fi') {
-      const correctAnswer = q.answers.find((a) => a.isCorrect)?.answerText.trim().toLowerCase().trim() || '';
+      const correctAnswer =
+        q.answers
+          .find((a) => a.isCorrect)
+          ?.answerText.trim()
+          .toLowerCase()
+          .trim() || '';
       isCorrect = this.textAnswer().trim().toLowerCase() === correctAnswer;
     }
     this.feedback.set(isCorrect ? 'Richtig! ✅' : 'Falsch! ❌');
@@ -80,18 +90,16 @@ export class QuestionPageComponent implements OnInit {
   revealSolution() {
     this.showSolution.set(true);
   }
-  
-  next() {
 
+  next() {
     this.selectedAnswerId.set([]);
     this.textAnswer.set('');
     this.feedback.set(null);
     this.showSolution.set(false);
 
-      if (this.currentIndex() < this.questions().length - 1) {
-        this.currentIndex.set(this.currentIndex() + 1);
-    }
-    else {
+    if (this.currentIndex() < this.questions().length - 1) {
+      this.currentIndex.set(this.currentIndex() + 1);
+    } else {
       console.log('Ende der Fragenliste erreicht.');
     }
   }
