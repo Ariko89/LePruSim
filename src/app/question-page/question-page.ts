@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { Question } from '../data/question';
 import { Observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { Questions } from '../service/questions';
 
 @Component({
   selector: 'app-question-page',
@@ -8,5 +10,31 @@ import { Observable } from 'rxjs';
   templateUrl: './question-page.html',
 })
 export class QuestionPageComponent {
-  currentQuestion?: Observable<Question>;
+  questions = signal<Question[]>([]);
+  examId = '';
+  topicId = '';
+
+  constructor(
+    private route: ActivatedRoute,
+    public questionService: Questions,
+  ) {}
+  ngOnInit(): void {
+    this.route.paramMap.subscribe((params) => {
+      this.examId = params.get('examId') ?? '';
+
+      this.topicId = params.get('topicId') ?? '';
+      console.log(this.examId);
+      console.log(this.topicId);
+
+      this.questionService.getQuestions(this.examId, this.topicId).subscribe({
+        next: (questions) => {
+          console.log(questions);
+          this.questions.set(questions);
+        },
+        error: (err) => {
+          console.error('Fragen können nicht geladen werden:', err);
+        },
+      });
+    });
+  }
 }

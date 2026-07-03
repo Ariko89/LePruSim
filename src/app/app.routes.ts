@@ -6,7 +6,7 @@ import { QuestionDetails } from './question-details/question-details';
 
 export const routes: Routes = [
   { path: '', component: Home },
-  { path: 'question-page', component: QuestionPageComponent },
+  { path: 'question-page/:examId/:topicId', component: QuestionPageComponent },
   { path: 'question-catalog', component: QuestionCatalog },
   { path: 'question-details/:examId/:topicId', component: QuestionDetails },
 ];
